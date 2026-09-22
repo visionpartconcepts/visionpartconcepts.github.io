@@ -63,36 +63,60 @@ document.addEventListener('DOMContentLoaded', function () {
     render();
   });
 
-  // Qualitative results: magnifier lens on hover
-  if (window.matchMedia('(hover: hover)').matches) {
-    document.querySelectorAll('#results .gallery-slide img').forEach(function (img) {
-      var wrap = document.createElement('div');
-      wrap.className = 'gallery-img-wrap';
-      img.parentNode.insertBefore(wrap, img);
-      wrap.appendChild(img);
+  // Qualitative results: click (or tap) an image to view it full size
+  var galleryImgs = document.querySelectorAll('#results .gallery-slide img');
+  if (galleryImgs.length) {
+    var lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.setAttribute('role', 'dialog');
+    lightbox.setAttribute('aria-modal', 'true');
+    lightbox.setAttribute('aria-label', 'Enlarged image');
+    lightbox.hidden = true;
+    lightbox.innerHTML = '<button class="lightbox-close" aria-label="Close enlarged image">&times;</button><img alt="">';
+    document.body.appendChild(lightbox);
 
-      var lens = document.createElement('div');
-      lens.className = 'zoom-lens';
-      wrap.appendChild(lens);
+    var lightboxImg = lightbox.querySelector('img');
+    var closeBtn = lightbox.querySelector('.lightbox-close');
+    var opener = null;
 
-      var zoomFactor = 2.5;
+    function openLightbox(img) {
+      opener = img;
+      lightboxImg.src = img.currentSrc || img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.hidden = false;
+      lightbox.scrollLeft = 0;
+      document.body.classList.add('lightbox-open');
+      requestAnimationFrame(function () { lightbox.classList.add('open'); });
+      closeBtn.focus();
+    }
 
-      wrap.addEventListener('mousemove', function (e) {
-        var rect = wrap.getBoundingClientRect();
-        var lensSize = lens.offsetWidth;
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        var lensX = Math.max(0, Math.min(x - lensSize / 2, rect.width - lensSize));
-        var lensY = Math.max(0, Math.min(y - lensSize / 2, rect.height - lensSize));
+    function closeLightbox() {
+      if (lightbox.hidden) return;
+      lightbox.classList.remove('open');
+      lightbox.hidden = true;
+      document.body.classList.remove('lightbox-open');
+      if (opener) opener.focus();
+    }
 
-        lens.style.left = lensX + 'px';
-        lens.style.top = lensY + 'px';
-        lens.style.backgroundImage = 'url(' + img.src + ')';
-        lens.style.backgroundSize = (rect.width * zoomFactor) + 'px ' + (rect.height * zoomFactor) + 'px';
-        lens.style.backgroundPosition = (-lensX * zoomFactor) + 'px ' + (-lensY * zoomFactor) + 'px';
+    galleryImgs.forEach(function (img) {
+      img.classList.add('zoomable');
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', 'View full size: ' + img.alt);
+      img.addEventListener('click', function () { openLightbox(img); });
+      img.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(img);
+        }
       });
-      wrap.addEventListener('mouseenter', function () { lens.classList.add('active'); });
-      wrap.addEventListener('mouseleave', function () { lens.classList.remove('active'); });
+    });
+
+    // Any click inside the overlay (image, backdrop or the close button) closes it;
+    // dragging to pan on small screens does not fire a click.
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
     });
   }
 

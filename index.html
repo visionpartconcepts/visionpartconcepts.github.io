@@ -106,7 +106,7 @@
         <div class="insight-diagram figure-block">
           <div class="corr-figure-row">
             <div class="corr-figure-item">
-              <img src="assets/img/fig1_attn_input.png" alt="Input image: a black dog standing in grass.">
+              <img src="assets/img/fig1_attn_input.jpg" alt="Input image: a black dog standing in grass.">
             </div>
             <div class="corr-figure-item corr-figure-item-wide">
               <img src="assets/img/fig1_attn_flux2.png" alt="Per-word cross-attention maps from FLUX.2 for the tokens 'left', 'front', and 'leg', each diffuse and spread across most of the dog rather than isolating the correct leg.">
@@ -130,18 +130,18 @@
         <figure class="insight-diagram figure-block">
           <div class="corr-figure-row">
             <div class="corr-figure-item">
-              <img src="assets/img/sem_corr_fig1.png" alt="A small dog standing on a table, with colored dots marking keypoints on its ears, legs, and tail.">
+              <img src="assets/img/sem_corr_fig1.jpg" alt="A grey cat sitting upright, with colored dots marking the tip and base of each ear and a front paw.">
             </div>
             <div class="corr-figure-item">
-              <img src="assets/img/sem_corr_fig2.png" alt="A different dog in an entirely different pose and viewpoint, with the same colored keypoints correctly landing on the corresponding parts.">
+              <img src="assets/img/sem_corr_fig2.jpg" alt="A different tabby cat lying down, with the same colored dots correctly landing on the matching ear tips, ear bases, and paw as predicted from Stable Diffusion features.">
             </div>
           </div>
           <figcaption class="figure-caption">
             <span class="fig-num">Semantic correspondence.</span> Internal diffusion features can match the same
-            object part across very different poses, viewpoints, and even instances with little to no supervision
-            &mdash; each colored point here marks the same physical part (an ear, a paw, the tail) found
-            independently in both images. Figure adapted from Luo et al., <em>Diffusion Hyperfeatures: Searching
-            Through Time and Space for Semantic Correspondence</em>, NeurIPS 2023.
+            object part across different instances and poses with no supervision &mdash; each colored point on the
+            left (the tip and base of each ear, a front paw) is matched to the corresponding point on a different
+            cat using Stable Diffusion features alone, keeping the left and right ears apart. Figure adapted from
+            Tang et al., <em>Emergent Correspondence from Image Diffusion</em>, NeurIPS 2023.
           </figcaption>
         </figure>
 
