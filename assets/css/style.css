@@ -135,6 +135,9 @@ p {
 
 strong { color: var(--text-primary); font-weight: 700; }
 
+/* Keep hyphenated terms (e.g. "open-vocabulary") from breaking at the hyphen */
+.nowrap { white-space: nowrap; }
+
 /* ---------- Hero ---------- */
 
 .hero {
@@ -216,6 +219,7 @@ strong { color: var(--text-primary); font-weight: 700; }
 }
 
 .hero-visual {
+  position: relative;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -227,6 +231,35 @@ strong { color: var(--text-primary); font-weight: 700; }
   border-radius: 10px;
   outline: none;
 }
+
+/* Pause/play control overlaid on the hero teaser video */
+.video-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.hero-visual:hover .video-toggle,
+.video-toggle:focus-visible { opacity: 1; }
+.video-toggle:hover { background: rgba(0, 0, 0, 0.75); }
+.video-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.video-toggle svg { width: 16px; height: 16px; fill: currentColor; }
+.video-toggle .icon-play { display: none; }
+.video-toggle.is-paused .icon-play { display: block; }
+.video-toggle.is-paused .icon-pause { display: none; }
 
 /* ---------- Figures ---------- */
 
@@ -305,30 +338,24 @@ figure { margin: 0; }
 
 /* ---------- Scrollytelling figure (Section 3.2) ---------- */
 
-.scrolly {
+/* Section 3.2: diagram beside a numbered list of steps. Hovering, clicking or
+   focusing a step highlights its region of the diagram; nothing is scroll-driven. */
+.method-steps {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
+  align-items: start;
 }
 
 @media (min-width: 860px) {
-  .scrolly { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .method-steps { grid-template-columns: minmax(0, 420px) 1fr; gap: 40px; }
+  /* The list can be a little taller than the diagram; keep the diagram in view. */
+  .method-steps-figure { position: sticky; top: 24px; }
 }
 
-/* .scrolly-sticky-col is the actual grid item: a plain (non-sticky) column whose
-   height JS sets to match .scrolly-steps. position:sticky lives one level deeper,
-   on .scrolly-sticky -- putting sticky directly on a grid item with a JS-driven
-   height does not engage reliably in at least some browser versions. */
-.scrolly-sticky-col { min-width: 0; }
-
-.scrolly-sticky {
-  position: sticky;
-  top: 28px;
-}
-
-.scrolly-figure {
+.method-steps-figure {
   position: relative;
-  width: fit-content;
+  width: 100%;
   max-width: 420px;
   margin: 0 auto;
   border-radius: 8px;
@@ -337,72 +364,97 @@ figure { margin: 0; }
   background: var(--surface);
 }
 
-.scrolly-figure img { display: block; width: 100%; height: auto; }
+.method-steps-figure img { display: block; width: 100%; height: auto; }
 
-.scrolly-mask-svg {
+.steps-mask-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.scrolly-scrim { fill: rgba(18, 18, 24, 0.64); }
+.steps-scrim { fill: rgba(18, 18, 24, 0.64); }
 
-.scrolly-hole { transition: fill-opacity 0.45s ease; }
+.steps-hole { transition: fill-opacity 0.3s ease; }
 
-.scrolly-steps {
+.method-steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
-.scrolly-step {
-  min-height: 62vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 20px 0;
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
+.method-step {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  column-gap: 14px;
+  align-items: start;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.scrolly-step:first-child { justify-content: flex-start; }
-.scrolly-step:last-child { justify-content: flex-start; min-height: 40vh; }
+.method-step:hover { background: var(--bg-alt); }
 
-.scrolly-step.active { opacity: 1; }
+.method-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.scrolly-step-num {
+.method-step.active {
+  background: var(--bg-alt);
+  border-left-color: var(--accent);
+}
+
+.method-step-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 26px;
   height: 26px;
+  margin-top: 1px;
   border-radius: 50%;
-  background: var(--bg-alt);
-  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
   font-family: var(--sans);
   font-weight: 700;
   font-size: 0.8rem;
-  margin-bottom: 10px;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.scrolly-step p {
+.method-step.active .method-step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+
+.method-step p {
+  margin: 0;
   font-family: var(--serif);
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--text-secondary);
-  max-width: 46ch;
 }
 
-.scrolly-step.active p { color: var(--text-primary); }
+.method-step.active p { color: var(--text-primary); }
 
+/* Stacked layout: keep the diagram visible above the list while it scrolls. */
 @media (max-width: 859px) {
-  .scrolly-sticky { position: sticky; top: 12px; margin-bottom: 8px; }
-  .scrolly-step { min-height: 42vh; }
-  .scrolly-step:last-child { min-height: 30vh; }
+  .method-steps-figure {
+    position: sticky;
+    top: 12px;
+    z-index: 2;
+    width: auto;
+    max-width: min(420px, 100%);
+    max-height: 45vh;
+    aspect-ratio: 640 / 695;
+  }
+  .method-steps-figure img { height: 100%; object-fit: contain; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scrolly-hole, .scrolly-step { transition: none; }
+  .steps-hole, .method-step, .method-step-num { transition: none; }
 }
 
 /* ---------- Results grid ---------- */
@@ -446,31 +498,37 @@ figure { margin: 0; }
 .gallery-panel { display: none; }
 .gallery-panel.active { display: block; }
 
+/* Plain column labels (not buttons): text over a hairline rule, aligned to
+   the image columns via --inset-l / --inset-r / --col-gap. */
 .gallery-col-headers {
   display: grid;
   grid-template-columns: repeat(var(--cols, 4), 1fr);
-  gap: 4px;
-  margin-bottom: 8px;
+  column-gap: var(--col-gap, 4px);
+  padding: 0 var(--inset-r, 0) 0 var(--inset-l, 0);
+  margin-bottom: 10px;
 }
 
 .gallery-col-headers span {
   text-align: center;
   font-family: var(--sans);
-  font-weight: 700;
-  font-size: 0.82rem;
+  font-weight: 500;
+  font-size: 0.8rem;
+  line-height: 1.3;
   color: var(--text-secondary);
-  padding: 8px 4px;
-  background: var(--btn-bg);
-  border-radius: 6px;
+  padding: 0 2px 6px;
+  border-bottom: 1px solid var(--border-strong);
+  cursor: default;
 }
 
 .gallery-col-headers span.ours {
-  color: #fff;
-  background: var(--accent);
+  font-weight: 700;
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  box-shadow: inset 0 -1px 0 var(--accent); /* 2px rule without shifting the baseline */
 }
 
 @media (max-width: 640px) {
-  .gallery-col-headers span { font-size: 0.66rem; padding: 6px 2px; }
+  .gallery-col-headers span { font-size: 0.62rem; padding-bottom: 4px; }
 }
 
 .gallery {

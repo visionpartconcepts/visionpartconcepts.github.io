@@ -20,7 +20,7 @@
       <p class="hero-blurb">
         PARTCONCEPTS encodes textual part descriptions (e.g. &lsquo;left ear&rsquo;) into compact tokens trained to
         attend to the correct part region in an image. The resulting localization sets a new state-of-the-art on
-        open-vocabulary part segmentation, and directly enables fine-grained, part-level
+        <span class="nowrap">open-vocabulary</span> part segmentation, and directly enables fine-grained, part-level
         instruction following in text-to-image generation.
       </p>
 
@@ -45,6 +45,10 @@
       <video autoplay muted loop playsinline aria-label="Animated overview of PARTCONCEPTS: fine-grained part instruction following and open-vocabulary part segmentation examples.">
         <source src="assets/video/hero_teaser.mp4" type="video/mp4">
       </video>
+      <button class="video-toggle" type="button" aria-label="Pause teaser video">
+        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -77,7 +81,7 @@
           in T2I generation.
         </p>
         <p>
-          On the standard Open-Vocabulary Part Segmentation (OVPS) benchmark, our method outperforms dedicated
+          On the standard <span class="nowrap">Open-Vocabulary</span> Part Segmentation (OVPS) benchmark, our method outperforms dedicated
           segmentation baselines, establishing a new state-of-the-art. We further evaluate on the more complex
           Pascal-Part benchmark for part <em>instance</em> segmentation, which contains fine-grained spatial
           annotations (e.g. &lsquo;left lower arm&rsquo;) &mdash; here we outperform all baselines by a very
@@ -203,51 +207,47 @@
         <span class="method-number">3.2 &middot; Training objective</span>
         <h3>The localization and generative objectives</h3>
 
-        <div class="scrolly" data-scrolly>
-          <div class="scrolly-sticky-col">
-            <div class="scrolly-sticky">
-              <div class="scrolly-figure">
-                <img src="assets/img/fig3_localization.png" alt="Diagram of the localization objective: PARTCONCEPT attention maps are extracted from mmDiT layers, concatenated with the clean input image in a U-Net style decoder, and supervised with a Dice loss against the ground-truth part mask, alongside a flow loss for the generative objective.">
-                <svg class="scrolly-mask-svg" viewBox="0 0 640 695" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                  <defs>
-                    <mask id="scrolly-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="695">
-                      <rect x="0" y="0" width="640" height="695" fill="#fff"/>
-                      <rect class="scrolly-hole" data-hole-step="1" x="0"   y="538" width="337" height="157" rx="10" fill="#000" fill-opacity="0"/>
-                      <rect class="scrolly-hole" data-hole-step="2" x="0"   y="293" width="352" height="219" rx="10" fill="#000" fill-opacity="0"/>
-                      <rect class="scrolly-hole" data-hole-step="3" x="353" y="258" width="250" height="278" rx="10" fill="#000" fill-opacity="0"/>
-                      <rect class="scrolly-hole" data-hole-step="4" x="378" y="148" width="190" height="90"  rx="10" fill="#000" fill-opacity="0"/>
-                      <rect class="scrolly-hole" data-hole-step="5" x="0"  y="175" width="200" height="83"  rx="10" fill="#000" fill-opacity="0"/>
-                      <rect class="scrolly-hole" data-hole-step="5" x="85" y="8"   width="500" height="144" rx="10" fill="#000" fill-opacity="0"/>
-                    </mask>
-                  </defs>
-                  <rect x="0" y="0" width="640" height="695" class="scrolly-scrim" mask="url(#scrolly-mask)"/>
-                </svg>
-              </div>
-            </div>
+        <div class="method-steps" data-method-steps>
+          <div class="method-steps-figure">
+            <img src="assets/img/fig3_localization.png" alt="Diagram of the localization objective: PARTCONCEPT attention maps are extracted from mmDiT layers, concatenated with the clean input image in a U-Net style decoder, and supervised with a Dice loss against the ground-truth part mask, alongside a flow loss for the generative objective.">
+            <svg class="steps-mask-svg" viewBox="0 0 640 695" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <mask id="steps-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="695">
+                  <rect x="0" y="0" width="640" height="695" fill="#fff"/>
+                  <rect class="steps-hole" data-hole-step="1" x="0"   y="538" width="337" height="157" rx="10" fill="#000" fill-opacity="0"/>
+                  <rect class="steps-hole" data-hole-step="2" x="0"   y="293" width="352" height="219" rx="10" fill="#000" fill-opacity="0"/>
+                  <rect class="steps-hole" data-hole-step="3" x="353" y="258" width="250" height="278" rx="10" fill="#000" fill-opacity="0"/>
+                  <rect class="steps-hole" data-hole-step="4" x="378" y="148" width="190" height="90"  rx="10" fill="#000" fill-opacity="0"/>
+                  <rect class="steps-hole" data-hole-step="5" x="0"  y="175" width="200" height="83"  rx="10" fill="#000" fill-opacity="0"/>
+                  <rect class="steps-hole" data-hole-step="5" x="85" y="8"   width="500" height="144" rx="10" fill="#000" fill-opacity="0"/>
+                </mask>
+              </defs>
+              <rect x="0" y="0" width="640" height="695" class="steps-scrim" mask="url(#steps-mask)"/>
+            </svg>
           </div>
 
-          <div class="scrolly-steps">
-            <div class="scrolly-step" data-step="1">
-              <span class="scrolly-step-num">1</span>
+          <ol class="method-steps-list" aria-label="Steps of the training objective; select a step to highlight it in the diagram">
+            <li class="method-step" data-step="1" role="button" tabindex="0" aria-pressed="false">
+              <span class="method-step-num" aria-hidden="true">1</span>
               <p>We start with an image's noisy visual tokens, alongside the interleaved text and PARTCONCEPT tokens (see Figure 2) &mdash; the query part phrases encoded as compact PARTCONCEPT embeddings.</p>
-            </div>
-            <div class="scrolly-step" data-step="2">
-              <span class="scrolly-step-num">2</span>
+            </li>
+            <li class="method-step" data-step="2" role="button" tabindex="0" aria-pressed="false">
+              <span class="method-step-num" aria-hidden="true">2</span>
               <p>These tokens pass through the mmDiT layers. At each LoRA-adapted layer, we extract the PARTCONCEPT tokens' cross-attention maps against the visual tokens.</p>
-            </div>
-            <div class="scrolly-step" data-step="3">
-              <span class="scrolly-step-num">3</span>
+            </li>
+            <li class="method-step" data-step="3" role="button" tabindex="0" aria-pressed="false">
+              <span class="method-step-num" aria-hidden="true">3</span>
               <p>The layer-wise attention maps are concatenated, forming a multi-scale representation of where each PARTCONCEPT attends in the image.</p>
-            </div>
-            <div class="scrolly-step" data-step="4">
-              <span class="scrolly-step-num">4</span>
+            </li>
+            <li class="method-step" data-step="4" role="button" tabindex="0" aria-pressed="false">
+              <span class="method-step-num" aria-hidden="true">4</span>
               <p>A lightweight decoder combines these concatenated attention maps with the clean input image to predict a precise part segmentation mask.</p>
-            </div>
-            <div class="scrolly-step" data-step="5">
-              <span class="scrolly-step-num">5</span>
+            </li>
+            <li class="method-step" data-step="5" role="button" tabindex="0" aria-pressed="false">
+              <span class="method-step-num" aria-hidden="true">5</span>
               <p>The localization (Dice) loss encourages this predicted mask to strongly match the correct part region, while a parallel flow loss (denoising MSE) preserves the base model's generative prior. The weight &lambda; balances the two: <code class="inline">L = L_dice + &lambda; &middot; L_flow</code>.</p>
-            </div>
-          </div>
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -258,7 +258,7 @@
     <div class="container">
       <h2>Results</h2>
       <p class="section-intro">
-        We evaluate PARTCONCEPTS along two axes: how well it <em>localizes</em> parts (open-vocabulary and
+        We evaluate PARTCONCEPTS along two axes: how well it <em>localizes</em> parts (<span class="nowrap">open-vocabulary</span> and
         instance-level part segmentation), and how that localization translates into <em>fine-grained instruction
         following</em> in T2I generation.
       </p>
@@ -303,7 +303,8 @@
           </div>
 
           <div class="gallery-panel" data-panel="seg">
-            <div class="gallery-col-headers" style="--cols:4;">
+            <!-- insets/gap match where the four columns sit inside the fig6 row images -->
+            <div class="gallery-col-headers" style="--cols:4; --inset-l:4.57%; --inset-r:7.75%; --col-gap:1.1%;">
               <span>Ground Truth</span>
               <span class="ours">Ours</span>
               <span>PartCATSeg (CVPR&rsquo;25)</span>

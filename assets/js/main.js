@@ -27,6 +27,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Hero teaser video: pause/play toggle
+  var heroVideo = document.querySelector('.hero-visual video');
+  var videoToggle = document.querySelector('.video-toggle');
+  if (heroVideo && videoToggle) {
+    function syncVideoToggle() {
+      var paused = heroVideo.paused;
+      videoToggle.classList.toggle('is-paused', paused);
+      videoToggle.setAttribute('aria-label', (paused ? 'Play' : 'Pause') + ' teaser video');
+    }
+
+    videoToggle.addEventListener('click', function () {
+      if (heroVideo.paused) {
+        heroVideo.play();
+      } else {
+        heroVideo.pause();
+      }
+    });
+    heroVideo.addEventListener('play', syncVideoToggle);
+    heroVideo.addEventListener('pause', syncVideoToggle);
+
+    // Respect reduced-motion preferences: start paused on a fully visible slide
+    // (the video opens on a blank frame that fades in).
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+      heroVideo.currentTime = 3;
+    }
+    syncVideoToggle();
+  }
+
   // Gallery carousels (one per .gallery-panel)
   document.querySelectorAll('.gallery-panel').forEach(function (panel) {
     var track = panel.querySelector('.gallery-track');
@@ -134,48 +164,45 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Scrollytelling figure (Section 3.2): sticky diagram, spotlight follows scroll
-  document.querySelectorAll('[data-scrolly]').forEach(function (scrolly) {
-    var steps = Array.prototype.slice.call(scrolly.querySelectorAll('.scrolly-step'));
-    var holes = Array.prototype.slice.call(scrolly.querySelectorAll('.scrolly-hole'));
-    var stickyCol = scrolly.querySelector('.scrolly-sticky-col');
-    var stepsCol = scrolly.querySelector('.scrolly-steps');
+  // Section 3.2 figure: hovering, clicking or focusing a step highlights its
+  // region of the diagram. A click "pins" the step; hover previews another and
+  // leaving the list returns to the pinned one.
+  document.querySelectorAll('[data-method-steps]').forEach(function (block) {
+    var steps = Array.prototype.slice.call(block.querySelectorAll('.method-step'));
+    var holes = Array.prototype.slice.call(block.querySelectorAll('.steps-hole'));
+    var list = block.querySelector('.method-steps-list');
+    if (!steps.length) return;
+    var pinned = steps[0].getAttribute('data-step');
 
-    // .scrolly-sticky-col is a plain grid item; its height is set explicitly here
-    // to match the steps column, giving the nested position:sticky element (one
-    // level deeper) a definite box to stick within.
-    function syncStickyHeight() {
-      if (stickyCol && stepsCol) {
-        stickyCol.style.height = stepsCol.offsetHeight + 'px';
-      }
-    }
-    syncStickyHeight();
-    window.addEventListener('resize', syncStickyHeight);
-    window.addEventListener('load', syncStickyHeight);
-
-    function setActive(stepNum) {
+    function show(stepNum) {
       steps.forEach(function (s) {
-        s.classList.toggle('active', s.getAttribute('data-step') === stepNum);
+        var on = s.getAttribute('data-step') === stepNum;
+        s.classList.toggle('active', on);
+        s.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
       holes.forEach(function (h) {
         h.setAttribute('fill-opacity', h.getAttribute('data-hole-step') === stepNum ? '1' : '0');
       });
     }
 
-    if (!('IntersectionObserver' in window) || steps.length === 0) {
-      if (steps[0]) setActive(steps[0].getAttribute('data-step'));
-      return;
+    function pin(step) {
+      pinned = step.getAttribute('data-step');
+      show(pinned);
     }
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          setActive(entry.target.getAttribute('data-step'));
+    steps.forEach(function (step) {
+      step.addEventListener('mouseenter', function () { show(step.getAttribute('data-step')); });
+      step.addEventListener('click', function () { pin(step); });
+      step.addEventListener('focus', function () { pin(step); });
+      step.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          pin(step);
         }
       });
-    }, { root: null, rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    });
+    list.addEventListener('mouseleave', function () { show(pinned); });
 
-    steps.forEach(function (step) { observer.observe(step); });
-    setActive(steps[0].getAttribute('data-step'));
+    show(pinned);
   });
 });
