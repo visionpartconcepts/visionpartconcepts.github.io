@@ -320,6 +320,13 @@ figure { margin: 0; }
   margin-bottom: 4px;
 }
 
+.author-mark {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.author-affil { font-weight: 600; }
+
 /* ---------- Method layout ---------- */
 
 .method-block { margin-bottom: 48px; }
