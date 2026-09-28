@@ -14,6 +14,7 @@
 <header class="hero">
   <div class="container">
     <div>
+      <p class="venue-badge">Accepted to NeurIPS 2026</p>
       <h1>PARTCONCEPTS</h1>
       <p class="subtitle">A Unified Mechanism for Fine-Grained Part Localization and Generation</p>
 
@@ -49,6 +50,7 @@
         <img src="assets/img/logo_iiith.png" alt="" class="logo-iiith">
         <img src="assets/img/logo_cvit.png" alt="" class="logo-cvit">
         <img src="assets/img/logo_neurips.png" alt="" class="logo-neurips">
+        <span class="hero-url">visionpartconcepts.github.io</span>
       </div>
       <button class="video-toggle" type="button" aria-label="Pause teaser video">
         <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
@@ -60,8 +62,8 @@
 
 <main>
 
-  <!-- Abstract -->
-  <section id="abstract">
+  <!-- Authors -->
+  <section id="authors">
     <div class="container">
       <div class="authors-block">
         <p class="authors">
@@ -74,36 +76,6 @@
           <sup class="author-affil">1</sup> IIIT Hyderabad
           &nbsp;&nbsp;
           <sup class="author-affil">2</sup> Adobe Research, Bengaluru
-        </p>
-      </div>
-
-      <h2>Abstract</h2>
-      <div class="prose">
-        <p>
-          While text-to-image (T2I) diffusion models exhibit strong semantic disentanglement at the object level,
-          they struggle to localize fine-grained object parts. Although the latent visual features in these models
-          are sufficiently fine-grained, the text&ndash;image interaction (cross-attention) fails to effectively
-          exploit this information. This results in coarse and ambiguous localization, particularly for spatially
-          distinct components such as &lsquo;left&rsquo; and &lsquo;right&rsquo; limbs.
-        </p>
-        <p>
-          To address this limitation, we introduce <strong>PARTCONCEPTS</strong>, a mechanism that encodes textual
-          part descriptions into compact, learnable representations. These PARTCONCEPT tokens are trained to
-          selectively attend to their corresponding part regions in the image. To evaluate the part-level
-          understanding of PARTCONCEPT tokens, we first probe their effectiveness for <em>part segmentation</em>.
-          We then evaluate whether the improved localization enables fine-grained <em>instruction following</em>
-          in T2I generation.
-        </p>
-        <p>
-          On the standard <span class="nowrap">Open-Vocabulary</span> Part Segmentation (OVPS) benchmark, our method outperforms dedicated
-          segmentation baselines, establishing a new state-of-the-art. We further evaluate on the more complex
-          Pascal-Part benchmark for part <em>instance</em> segmentation, which contains fine-grained spatial
-          annotations (e.g. &lsquo;left lower arm&rsquo;) &mdash; here we outperform all baselines by a very
-          significant margin. Finally, our qualitative and quantitative results show that this strong localization
-          directly enables fine-grained instruction following in T2I generation: textual attributes (e.g., color)
-          inherently bind to the correct PARTCONCEPT, without any explicit attribute-control mechanism. This
-          indicates that PARTCONCEPT tokens compose seamlessly with other text tokens, highlighting their
-          applicability for fine-grained, text-based generative control.
         </p>
       </div>
     </div>

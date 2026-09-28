@@ -168,6 +168,20 @@ strong { color: var(--text-primary); font-weight: 700; }
   }
 }
 
+.venue-badge {
+  display: inline-block;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.4em 0.9em;
+  margin-bottom: 14px;
+}
+
 .hero h1 {
   font-size: clamp(1.9rem, 1.5rem + 1.8vw, 2.6rem);
   font-weight: 600;
@@ -244,15 +258,20 @@ strong { color: var(--text-primary); font-weight: 700; }
   outline: none;
 }
 
-/* Logo strip overlaid on the hero teaser video. It sits in the bottom-left
-   area, which stays empty on every slide of the video. Sizes are percentages
-   of the video box so the strip scales with it. */
+/* Logo strip + page URL overlaid on the hero teaser video, bottom-left. This
+   corner is the only one that stays empty on EVERY slide (checked against all
+   six: title/subtitle/gen1/gen2/seg-text/seg) — the generation slides' images
+   run close to the bottom-right edge, and every slide's heading text runs
+   close to both top corners, so nowhere else is safe. Sizes are percentages
+   of the video box so the strip scales with it; the URL is fixed-color (not
+   a theme variable) since the video itself is always a white slideshow. */
 .hero-logos {
   position: absolute;
   left: 2.5%;
-  bottom: 2.5%;
+  bottom: 1.5%;
   width: 56%;   /* gives the percentage gap below a definite basis to scale from */
-  height: 10%;
+  height: 8.5%; /* the segmentation slide's "And produces SOTA results" caption sits
+                   just above this row — kept short of 10% so the two don't crowd */
   display: flex;
   align-items: center;
   gap: 3%;
@@ -266,6 +285,17 @@ strong { color: var(--text-primary); font-weight: 700; }
 }
 
 .hero-logos .logo-cvit { height: 88%; }
+
+.hero-url {
+  margin-left: 2%;
+  padding-left: 4%;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: #666;
+  white-space: nowrap;
+}
 
 /* Pause/play control overlaid on the hero teaser video */
 .video-toggle {
@@ -575,6 +605,17 @@ figure { margin: 0; }
 
 .gallery {
   position: relative;
+  /* Break out past the standard 1180px container/6vw padding so the examples
+     render much larger — the source images are up to 2800px wide (see gallery
+     re-render notes), so there's plenty of resolution for this. --gallery-w is
+     the target width (viewport width minus a 20px gutter on each side, capped
+     at 1500px on very wide screens); margin-left shifts the element left from
+     its default position (flush with the container's padded content edge) to
+     where that width, centered on the VIEWPORT, needs to start. Same technique
+     as .hero-visual's bleed, but symmetric on both sides instead of one. */
+  --gallery-w: min(100vw - 40px, 1500px);
+  width: var(--gallery-w);
+  margin-left: calc(max(0px, (100vw - var(--gallery-w)) / 2) - max(0px, (100vw - 1180px) / 2) - 6vw);
 }
 
 .gallery-viewport {
