@@ -153,7 +153,19 @@ strong { color: var(--text-primary); font-weight: 700; }
 }
 
 @media (min-width: 860px) {
-  .hero .container { grid-template-columns: 0.8fr 1.2fr; gap: 48px; }
+  /* Video column is given the larger share (and a wider gap) so the teaser sits
+     further right and the logos overlaid on it read more clearly. */
+  .hero .container { grid-template-columns: 0.8fr 1.45fr; gap: 56px; }
+
+  /* Let the teaser run past the container's right edge (stopping 24px from the
+     window edge) so it grows without squeezing the text column. The first term
+     is the gap between the container and the viewport edge on wide screens, the
+     second is the container's own 6vw side padding. */
+  .hero-visual {
+    margin-right: calc(195px - max(0px, (100vw - 1180px) / 2) - 6vw);
+    max-width: 720px;      /* keeps the bleed from growing without limit */
+    margin-left: auto;     /* so the capped video stays right-aligned */
+  }
 }
 
 .hero h1 {
@@ -231,6 +243,29 @@ strong { color: var(--text-primary); font-weight: 700; }
   border-radius: 10px;
   outline: none;
 }
+
+/* Logo strip overlaid on the hero teaser video. It sits in the bottom-left
+   area, which stays empty on every slide of the video. Sizes are percentages
+   of the video box so the strip scales with it. */
+.hero-logos {
+  position: absolute;
+  left: 2.5%;
+  bottom: 2.5%;
+  width: 56%;   /* gives the percentage gap below a definite basis to scale from */
+  height: 10%;
+  display: flex;
+  align-items: center;
+  gap: 3%;
+  pointer-events: none;
+}
+
+.hero-logos img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.hero-logos .logo-cvit { height: 88%; }
 
 /* Pause/play control overlaid on the hero teaser video */
 .video-toggle {
@@ -819,6 +854,7 @@ code.inline {
   display: flex;
   gap: 16px;
   justify-content: center;
+  align-items: center;   /* centre the shorter panel against the taller one */
   flex-wrap: wrap;
 }
 
