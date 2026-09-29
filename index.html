@@ -241,33 +241,35 @@
   <!-- Results -->
   <section id="results" class="alt">
     <div class="container">
-      <h2>Results</h2>
-      <p class="section-intro">
-        We evaluate <span class="textsc">PartConcepts</span> along two axes: how well it <em>localizes</em> parts (<span
-          class="nowrap">open-vocabulary</span> and
-        instance-level part segmentation), and how that localization translates into <em>fine-grained instruction
-          following</em> in T2I generation.
-      </p>
+      <h2>Evaluating <span class="textsc">PartConcepts</span></h2>
 
       <!-- Qualitative -->
       <div class="result-group">
         <div class="result-group-title">Qualitative results</div>
-        <p>
-          <span class="textsc">PartConcepts</span> generalizes to <strong>novel part phrases</strong> unseen in training
-          (<em>armrest</em>,
-          <em>left front wheel</em>, <em>wrist</em>) and to <strong>arbitrary attributes</strong> &mdash; even in
-          multi-part prompts, each attribute binds to its correct part. Dedicated segmentation models, meanwhile,
-          struggle to separate spatially-distinct instances such as &lsquo;left lower arm&rsquo; and &lsquo;right
-          upper arm&rsquo;. Browse examples for both generation and segmentation below.
-        </p>
 
         <div class="gallery">
-          <div class="gallery-tabs">
-            <button class="gallery-tab active" data-target="gen">Generation</button>
-            <button class="gallery-tab" data-target="seg">Segmentation</button>
+          <div class="result-cards">
+            <button class="result-card gallery-tab" data-target="gen">
+              <span class="result-card-title">PARTCONCEPTS for Fine-Grained Instruction Following</span>
+              <span class="result-card-cta">
+                <span class="cta-view">View examples</span>
+                <span class="cta-selected">Selected</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </span>
+            </button>
+            <button class="result-card gallery-tab" data-target="seg">
+              <span class="result-card-title">PARTCONCEPTS for Open-Vocabulary Part Segmentation</span>
+              <span class="result-card-cta">
+                <span class="cta-view">View examples</span>
+                <span class="cta-selected">Selected</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              </span>
+            </button>
           </div>
 
-          <div class="gallery-panel active" data-panel="gen">
+          <p class="gallery-empty-hint">Select a category above to view examples.</p>
+
+          <div class="gallery-panel" data-panel="gen">
             <div class="gallery-viewport">
               <div class="gallery-track">
                 <figure class="gallery-slide">

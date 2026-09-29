@@ -824,31 +824,101 @@ figure { margin: 0; }
 
 /* ---------- Gallery / carousel ---------- */
 
-.gallery-tabs {
+/* Two compact cards that pick which results gallery is shown below (the
+   .gallery-tab class + data-target is what main.js's tab-switching listens
+   for — kept for that hook even though the pill styling it used to carry is
+   gone, replaced entirely by .result-card below). Text-only on purpose: an
+   earlier version used a photo background per card, but for a plain picker
+   between two categories the image was unnecessary weight, not signal. */
+.result-cards {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
-  margin-bottom: 16px;
-}
-
-.gallery-tab {
-  padding: 0.6em 1.1em;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  border: none;
-  background: var(--btn-bg);
-  color: var(--text-secondary);
+  flex: 0 1 320px;   /* sized to fit its own content, not stretched full-width */
+  max-width: 340px;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: left;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-family: var(--sans);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
-.gallery-tab.active { background: var(--accent); color: #fff; }
-.gallery-tab:not(.active):hover { background: var(--btn-bg-hover); }
+@media (max-width: 480px) {
+  .result-card { flex-basis: 100%; max-width: none; }
+}
+
+.result-card:hover { border-color: var(--border-strong); background: var(--btn-bg); }
+.result-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.result-card.active {
+  border-color: var(--accent);
+  background: var(--bg-alt);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.result-card-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+.result-card-desc {
+  font-family: var(--serif);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.result-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.result-card.active .result-card-cta { color: var(--accent); }
+
+.result-card-cta svg { width: 12px; height: 12px; transition: transform 0.15s ease; }
+.result-card:hover .result-card-cta svg { transform: translateX(2px); }
+
+.result-card .cta-selected { display: none; }
+.result-card.active .cta-view { display: none; }
+.result-card.active .cta-selected { display: inline; }
 
 .gallery-panel { display: none; }
 .gallery-panel.active { display: block; }
+
+/* Shown only before either card has been picked; hidden as soon as one has
+   (:has() lets this stay pure CSS instead of another main.js hook). */
+.gallery-empty-hint {
+  display: block;
+  padding: 28px 0;
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+.gallery:has(.gallery-panel.active) .gallery-empty-hint { display: none; }
 
 /* Plain column labels (not buttons): text over a hairline rule, aligned to
    the image columns via --inset-l / --inset-r / --col-gap. */
