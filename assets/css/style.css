@@ -103,6 +103,38 @@ section.alt { background: var(--bg-alt); }
   line-height: 1.45;
 }
 
+.motivation-issue {
+  position: relative;
+}
+
+.motivation-issue::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -22px;
+  border-radius: 12px;
+  background: rgb(255 237 234 / 78%);
+  pointer-events: none;
+}
+
+.motivation-issue .insight-row {
+  position: relative;
+  z-index: 1;
+}
+
+.motivation-issue .insight-row-text p {
+  color: #963b16;
+}
+
+.motivation-issue:hover {
+  animation: motivation-issue-glow 0.9s ease-in-out 2;
+}
+
+@keyframes motivation-issue-glow {
+  0%, 100% { box-shadow: 0 0 0 rgb(232 133 65 / 0%); }
+  50% { box-shadow: 0 0 26px rgb(220 91 73 / 24%); }
+}
+
 code {
   padding: 0.08em 0.28em;
   border-radius: 4px;
@@ -308,6 +340,116 @@ code {
   height: auto;
 }
 
+.evaluation-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 32px;
+}
+
+.evaluation-intro {
+  max-width: 860px;
+  margin-bottom: 0;
+}
+
+.evaluation-card-segmentation { order: 1; }
+.evaluation-card:not(.evaluation-card-segmentation) { order: 2; }
+
+.evaluation-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.evaluation-card h3 {
+  margin-bottom: 8px;
+}
+
+.evaluation-card-description {
+  min-height: 3.2em;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.evaluation-card > img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.evaluation-card-clickable {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.evaluation-card-clickable::before {
+  content: "click to expand";
+  position: absolute;
+  right: 18px;
+  top: -29px;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.evaluation-card-clickable:hover {
+  box-shadow: 0 10px 32px rgb(109 76 165 / 24%);
+  transform: scale(1.025);
+}
+
+.evaluation-card-clickable:hover::before { opacity: 1; }
+
+.results-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 5vh 5vw;
+  background: rgb(20 18 28 / 64%);
+}
+
+.results-modal[hidden] { display: none; }
+
+.results-modal-panel {
+  position: relative;
+  width: min(1100px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 22px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 24%);
+}
+
+.results-modal-panel img { width: 100%; height: auto; }
+
+.results-modal-close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  float: right;
+  width: 34px;
+  height: 34px;
+  margin: -10px -10px 8px 8px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 @media (max-width: 700px) {
   .insight-rows { gap: 48px; }
   .insight-row {
@@ -320,6 +462,9 @@ code {
     grid-template-columns: 1fr;
     gap: 24px;
   }
+  .evaluation-cards { grid-template-columns: 1fr; }
+  .evaluation-card-segmentation,
+  .evaluation-card:not(.evaluation-card-segmentation) { order: initial; }
   .hover-card {
     position: fixed;
     top: auto;
@@ -688,10 +833,7 @@ figure { margin: 0; }
   display: block;
 }
 
-/* ---------- Scrollytelling figure (Section 3.2) ---------- */
-
-/* Section 3.2: diagram beside a numbered list of steps. Hovering, clicking or
-   focusing a step highlights its region of the diagram; nothing is scroll-driven. */
+/* ---------- Training figure (Section 3.2) ---------- */
 .method-steps {
   display: grid;
   grid-template-columns: 1fr;
@@ -708,12 +850,8 @@ figure { margin: 0; }
 .method-steps-figure {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 315px;
   margin: 0 auto;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--surface);
 }
 
 .method-steps-figure img { display: block; width: 100%; height: auto; }
@@ -745,18 +883,6 @@ figure { margin: 0; }
   align-items: start;
   padding: 10px 14px;
   border-radius: 8px;
-  border-left: 3px solid transparent;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.method-step:hover { background: var(--bg-alt); }
-
-.method-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.method-step.active {
-  background: var(--bg-alt);
-  border-left-color: var(--accent);
 }
 
 .method-step-num {
@@ -767,18 +893,12 @@ figure { margin: 0; }
   height: 26px;
   margin-top: 1px;
   border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  color: var(--text-secondary);
+  border: 1px solid #6d4ca5;
+  background: #6d4ca5;
+  color: #fff;
   font-family: var(--sans);
   font-weight: 700;
   font-size: 0.8rem;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-.method-step.active .method-step-num {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--bg);
 }
 
 .method-step p {
@@ -788,8 +908,6 @@ figure { margin: 0; }
   line-height: 1.55;
   color: var(--text-secondary);
 }
-
-.method-step.active p { color: var(--text-primary); }
 
 /* Stacked layout: keep the diagram visible above the list while it scrolls. */
 @media (max-width: 859px) {

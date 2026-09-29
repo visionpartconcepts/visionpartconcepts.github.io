@@ -12,6 +12,55 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Evaluation results modal
+  var resultCards = document.querySelectorAll('[data-results-modal]');
+  if (resultCards.length) {
+    var resultsModal = document.createElement('div');
+    resultsModal.className = 'results-modal';
+    resultsModal.hidden = true;
+    resultsModal.setAttribute('role', 'dialog');
+    resultsModal.setAttribute('aria-modal', 'true');
+    resultsModal.setAttribute('aria-label', 'Evaluation results');
+    resultsModal.innerHTML = '<div class="results-modal-panel"><button class="results-modal-close" type="button" aria-label="Close evaluation results">&times;</button><img class="results-modal-image" alt="Evaluation results for PartConcepts."></div>';
+    document.body.appendChild(resultsModal);
+    var resultsClose = resultsModal.querySelector('.results-modal-close');
+    var resultsImage = resultsModal.querySelector('.results-modal-image');
+    var activeCard = null;
+
+    function closeResultsModal() {
+      resultsModal.hidden = true;
+      document.body.classList.remove('lightbox-open');
+      if (activeCard) activeCard.blur();
+    }
+
+    function openResultsModal(card) {
+      activeCard = card;
+      var type = card.getAttribute('data-results-modal');
+      resultsImage.src = type === 'segmentation' ? 'assets/img/seg_results.svg' : 'assets/img/gen_results.svg';
+      resultsImage.alt = type === 'segmentation' ? 'Segmentation results for PartConcepts.' : 'Generation results for PartConcepts.';
+      resultsModal.hidden = false;
+      document.body.classList.add('lightbox-open');
+      resultsClose.focus();
+    }
+
+    resultCards.forEach(function (card) {
+      card.addEventListener('click', function () { openResultsModal(card); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openResultsModal(card);
+        }
+      });
+    });
+    resultsClose.addEventListener('click', closeResultsModal);
+    resultsModal.addEventListener('click', function (e) {
+      if (e.target === resultsModal) closeResultsModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !resultsModal.hidden) closeResultsModal();
+    });
+  }
+
   // Back-to-top button
   var toTop = document.querySelector('.to-top');
   if (toTop) {
@@ -255,45 +304,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Section 3.2 figure: hovering, clicking or focusing a step highlights its
-  // region of the diagram. A click "pins" the step; hover previews another and
-  // leaving the list returns to the pinned one.
-  document.querySelectorAll('[data-method-steps]').forEach(function (block) {
-    var steps = Array.prototype.slice.call(block.querySelectorAll('.method-step'));
-    var holes = Array.prototype.slice.call(block.querySelectorAll('.steps-hole'));
-    var list = block.querySelector('.method-steps-list');
-    if (!steps.length) return;
-    var pinned = steps[0].getAttribute('data-step');
-
-    function show(stepNum) {
-      steps.forEach(function (s) {
-        var on = s.getAttribute('data-step') === stepNum;
-        s.classList.toggle('active', on);
-        s.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-      holes.forEach(function (h) {
-        h.setAttribute('fill-opacity', h.getAttribute('data-hole-step') === stepNum ? '1' : '0');
-      });
-    }
-
-    function pin(step) {
-      pinned = step.getAttribute('data-step');
-      show(pinned);
-    }
-
-    steps.forEach(function (step) {
-      step.addEventListener('mouseenter', function () { show(step.getAttribute('data-step')); });
-      step.addEventListener('click', function () { pin(step); });
-      step.addEventListener('focus', function () { pin(step); });
-      step.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          pin(step);
-        }
-      });
-    });
-    list.addEventListener('mouseleave', function () { show(pinned); });
-
-    show(pinned);
-  });
 });

@@ -22,9 +22,9 @@
 
       <div class="hero-authors">
         <p class="authors">
-          <span class="author-item">Vaibhav Agrawal<sup class="author-mark">*</sup><sup
+          <span class="author-item">Vaibhav Agrawal<sup
               class="author-affil">1</sup></span>,
-          <span class="author-item">Varghese P Kuruvilla<sup class="author-mark">*</sup><sup
+          <span class="author-item">Varghese P Kuruvilla<sup
               class="author-affil">1</sup></span>,
           <span class="author-item">Harsh Rangwani<sup class="author-affil">2</sup></span>,
           <span class="author-item">Ravi Kiran S<sup class="author-affil">1</sup></span>
@@ -94,7 +94,7 @@
     <div class="container">
       <h2>Motivation</h2>
       <div class="insight-rows">
-        <div class="insight-row" id="motivation-part-failure">
+        <div class="insight-row">
           <div class="insight-row-text">
             <p>Diffusion latents have strong semantics at the object-level, e.g., <code>dog</code>.</p>
           </div>
@@ -107,6 +107,7 @@
           </figure>
         </div>
 
+        <div class="motivation-issue" id="motivation-part-failure">
         <div class="insight-row">
           <div class="insight-row-text">
             <p>But this fails to extend to the part-level granularity, e.g., <code>left lower leg</code>.</p>
@@ -121,6 +122,7 @@
             <figcaption>Cross-attention maps with the <code>left</code>, <code>lower</code>, and <code>leg</code> tokens.</figcaption>
           </figure>
         </div>
+        </div>
       </div>
     </div>
   </section>
@@ -128,7 +130,7 @@
   <!-- Key Observations -->
   <section id="key-observations">
     <div class="container">
-      <h2>Key observations</h2>
+      <h2>Key motivating observations</h2>
       <div class="observations">
         <div class="observation">
           <p>Prior work has shown that diffusion latents enable dense <span class="hover-reference" tabindex="0">semantic correspondence<span class="hover-card hover-card-correspondence" role="tooltip"><span class="hover-card-figures"><img src="assets/img/sem_corr_fig1.jpg" alt="Semantic correspondence points on a grey cat."><img src="assets/img/sem_corr_fig2.jpg" alt="Semantic correspondence points transferred to a second cat."></span><span class="hover-card-caption">Semantic correspondence matches the same visual parts across different images and poses using internal diffusion features. Figure adapted from Tang et al., <em>Emergent Correspondence from Image Diffusion</em>, NeurIPS 2023; see also Zhang et al., <em>Diffusion Features as Semantic Representations</em>, ICML 2023.</span></span></span>; hence possess the necessary resolution for part-level discrimination.</p>
@@ -145,7 +147,7 @@
     <div class="container">
       <h2>Research question</h2>
       <div class="research-question-callout">
-        <p>Clearly, the textual part phrases are not well represented in the text-image interface. Our core research question, therefore, is the following:</p>
+        <p>Our observations suggest that part phrases (e.g., <code>left ear</code>, <code>right eye</code>) are not well represented on the text-image manifold. Our core research question, therefore, is the following:</p>
         <p class="research-question-callout-text">Can we introduce textual part concepts into the T2I model, while preserving its base capabilities?</p>
       </div>
     </div>
@@ -178,59 +180,28 @@
         <span class="method-number">3.2 &middot; Training objective</span>
         <h3>The localization and generative objectives</h3>
 
-        <div class="method-steps" data-method-steps>
+        <div class="method-steps">
           <div class="method-steps-figure">
-            <img src="assets/img/fig3_localization.png"
-              alt="Diagram of the localization objective: PartConcept attention maps are extracted from mmDiT layers, concatenated with the clean input image in a U-Net style decoder, and supervised with a Dice loss against the ground-truth part mask, alongside a flow loss for the generative objective.">
-            <svg class="steps-mask-svg" viewBox="0 0 640 695" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-              <defs>
-                <mask id="steps-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="695">
-                  <rect x="0" y="0" width="640" height="695" fill="#fff" />
-                  <rect class="steps-hole" data-hole-step="1" x="0" y="538" width="337" height="157" rx="10" fill="#000"
-                    fill-opacity="0" />
-                  <rect class="steps-hole" data-hole-step="2" x="0" y="293" width="352" height="219" rx="10" fill="#000"
-                    fill-opacity="0" />
-                  <rect class="steps-hole" data-hole-step="3" x="353" y="258" width="250" height="278" rx="10"
-                    fill="#000" fill-opacity="0" />
-                  <rect class="steps-hole" data-hole-step="4" x="378" y="148" width="190" height="90" rx="10"
-                    fill="#000" fill-opacity="0" />
-                  <rect class="steps-hole" data-hole-step="5" x="0" y="175" width="200" height="83" rx="10" fill="#000"
-                    fill-opacity="0" />
-                  <rect class="steps-hole" data-hole-step="5" x="85" y="8" width="500" height="144" rx="10" fill="#000"
-                    fill-opacity="0" />
-                </mask>
-              </defs>
-              <rect x="0" y="0" width="640" height="695" class="steps-scrim" mask="url(#steps-mask)" />
-            </svg>
+            <img src="assets/img/method_training.svg"
+              alt="Training pipeline: noisy visual latents and text with PartConcept tokens pass through mmDiT, attention maps are decoded to segmentation masks, and flow loss preserves the generative prior.">
           </div>
 
-          <ol class="method-steps-list"
-            aria-label="Steps of the training objective; select a step to highlight it in the diagram">
-            <li class="method-step" data-step="1" role="button" tabindex="0" aria-pressed="false">
+          <ol class="method-steps-list" aria-label="Steps of the training objective">
+            <li class="method-step">
               <span class="method-step-num" aria-hidden="true">1</span>
-              <p>Noisy visual latents, and text with embedded <span
-                  class="textsc">PartConcept</span> tokens are input to the mmDiT.</p>
+              <p>Noisy visual latents, and text + <span class="textsc">PartConcept</span> tokens are input to the mmDiT.</p>
             </li>
-            <li class="method-step" data-step="2" role="button" tabindex="0" aria-pressed="false">
+            <li class="method-step">
               <span class="method-step-num" aria-hidden="true">2</span>
-              <p>These tokens pass through the mmDiT layers. At each LoRA-adapted layer, we extract the <span
-                  class="textsc">PartConcept</span> tokens' cross-attention maps against the visual tokens.</p>
+              <p>Layer-wise cross attention maps are extracted.</p>
             </li>
-            <li class="method-step" data-step="3" role="button" tabindex="0" aria-pressed="false">
+            <li class="method-step">
               <span class="method-step-num" aria-hidden="true">3</span>
-              <p>The layer-wise attention maps are concatenated, forming a multi-scale representation of where each
-                <span class="textsc">PartConcept</span> attends in the image.</p>
+              <p>Layer-wise concatenated attention maps are decoded to segmentation masks.</p>
             </li>
-            <li class="method-step" data-step="4" role="button" tabindex="0" aria-pressed="false">
+            <li class="method-step">
               <span class="method-step-num" aria-hidden="true">4</span>
-              <p>A lightweight decoder combines these concatenated attention maps with the clean input image to predict
-                a precise part segmentation mask.</p>
-            </li>
-            <li class="method-step" data-step="5" role="button" tabindex="0" aria-pressed="false">
-              <span class="method-step-num" aria-hidden="true">5</span>
-              <p>The localization (Dice) loss encourages this predicted mask to strongly match the correct part region,
-                while a parallel flow loss (denoising MSE) preserves the base model's generative prior. The weight
-                &lambda; balances the two: <code class="inline">L = L_dice + &lambda; &middot; L_flow</code>.</p>
+              <p>Flow loss is used on the visual prediction by mmDiT; this preserves the generative prior of the base model.</p>
             </li>
           </ol>
         </div>
@@ -241,96 +212,19 @@
   <!-- Results -->
   <section id="results" class="alt">
     <div class="container">
-      <h2>Evaluating <span class="textsc">PartConcepts</span></h2>
-
-      <!-- Qualitative -->
-      <div class="result-group">
-        <div class="result-group-title">Qualitative results</div>
-
-        <div class="gallery">
-          <div class="result-cards">
-            <button class="result-card gallery-tab" data-target="gen">
-              <span class="result-card-title">PARTCONCEPTS for Fine-Grained Instruction Following</span>
-              <span class="result-card-cta">
-                <span class="cta-view">View examples</span>
-                <span class="cta-selected">Selected</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-              </span>
-            </button>
-            <button class="result-card gallery-tab" data-target="seg">
-              <span class="result-card-title">PARTCONCEPTS for Open-Vocabulary Part Segmentation</span>
-              <span class="result-card-cta">
-                <span class="cta-view">View examples</span>
-                <span class="cta-selected">Selected</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-              </span>
-            </button>
-          </div>
-
-          <p class="gallery-empty-hint">Select a category above to view examples.</p>
-
-          <div class="gallery-panel" data-panel="gen">
-            <div class="gallery-viewport">
-              <div class="gallery-track">
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig4_row1.jpg"
-                    alt="Generated images with PartConcept attention maps for 'left lower leg', 'right wrist', and 'left back leg'.">
-                  <figcaption><span class="fig-num">Fig. 4</span>Novel part phrases &lsquo;wrist&rsquo; and
-                    &lsquo;leg&rsquo; &mdash; <span class="textsc">PartConcept</span> attention maps (right of each
-                    photo) show sharp, correctly localized attention.</figcaption>
-                </figure>
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig4_row2.jpg"
-                    alt="Generated images with PartConcept attention maps for 'right ear', 'left front wheel', and 'left armrest'.">
-                  <figcaption><span class="fig-num">Fig. 4</span>&lsquo;Front wheel&rsquo; and &lsquo;armrest&rsquo; are
-                    not seen during training, yet localize and bind correctly.</figcaption>
-                </figure>
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig4_row3.jpg"
-                    alt="Generated images with two PartConcepts per prompt: left arm on fire / right arm made of ice, and left foot blue sock / right foot green sock.">
-                  <figcaption><span class="fig-num">Fig. 4</span>Multi-part prompts: two <span
-                      class="textsc">PartConcepts</span> in the same image, each attribute correctly bound to its own
-                    part.</figcaption>
-                </figure>
-              </div>
-            </div>
-            <button class="gallery-arrow prev" aria-label="Previous example">&lsaquo;</button>
-            <button class="gallery-arrow next" aria-label="Next example">&rsaquo;</button>
-            <div class="gallery-dots"></div>
-          </div>
-
-          <div class="gallery-panel" data-panel="seg">
-            <!-- Row images are 4 uniform 512x512 panels with a 14px gap; see
-                 assets/js/part-legend.js for the hover-label feature, which
-                 needs data-category on each img to know which part palette
-                 to match against. -->
-            <div class="gallery-col-headers" style="--cols:4; --inset-l:0%; --inset-r:0%; --col-gap:0.67%;">
-              <span>Ground Truth</span>
-              <span class="ours">Ours</span>
-              <span>PartCATSeg (CVPR&rsquo;25)</span>
-              <span>LangHOPS (NeurIPS&rsquo;25)</span>
-            </div>
-            <div class="gallery-viewport">
-              <div class="gallery-track">
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row1.jpg" data-category="dog"
-                    alt="Part instance segmentation comparison on a dog: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
-                </figure>
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row2.jpg" data-category="person"
-                    alt="Part instance segmentation comparison on a person riding a motorbike: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
-                </figure>
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row3.jpg" data-category="cat"
-                    alt="Part instance segmentation comparison on a cat: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
-                </figure>
-              </div>
-            </div>
-            <button class="gallery-arrow prev" aria-label="Previous example">&lsaquo;</button>
-            <button class="gallery-arrow next" aria-label="Next example">&rsaquo;</button>
-            <div class="gallery-dots"></div>
-          </div>
-        </div>
+      <h2>Evaluating <span class="textsc">PartConcept</span> representations</h2>
+      <p class="section-intro evaluation-intro">To evaluate the part-level understanding of <span class="textsc">PartConcept</span> tokens, we first demonstrate our method&rsquo;s effectiveness for part segmentation. We then show that this strong localization directly enables precise part-level attribute binding, thus providing fine-grained instruction following in T2I generation. Thus, our <span class="textsc">PartConcepts</span> provide a unified mechanism for both visual grounding and generative control.</p>
+      <div class="evaluation-cards">
+        <article class="evaluation-card evaluation-card-clickable" data-results-modal="generation" role="button" tabindex="0" aria-label="Open generation results">
+          <h3>Part-level instruction following</h3>
+          <p class="evaluation-card-description">Generating images that follow fine-grained instructions about specific object parts.</p>
+          <img src="assets/img/generation_result_thumbnail.svg" alt="Examples of part-level instruction following with PartConcepts.">
+        </article>
+        <article class="evaluation-card evaluation-card-clickable evaluation-card-segmentation" data-results-modal="segmentation" role="button" tabindex="0" aria-label="Open segmentation results">
+          <h3>Part instance segmentation</h3>
+          <p class="evaluation-card-description">Localizing and segmenting individual object parts from open-vocabulary text prompts.</p>
+          <img src="assets/img/segmentation_result_thumbnail.svg" alt="Examples of part instance segmentation with PartConcepts.">
+        </article>
       </div>
 
     </div>
