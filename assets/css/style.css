@@ -842,9 +842,7 @@ figure { margin: 0; }
 }
 
 @media (min-width: 860px) {
-  .method-steps { grid-template-columns: minmax(0, 420px) 1fr; gap: 40px; }
-  /* The list can be a little taller than the diagram; keep the diagram in view. */
-  .method-steps-figure { position: sticky; top: 24px; }
+  .method-steps { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 80px); }
 }
 
 .method-steps-figure {
@@ -909,18 +907,12 @@ figure { margin: 0; }
   color: var(--text-secondary);
 }
 
-/* Stacked layout: keep the diagram visible above the list while it scrolls. */
+/* Stack the figure above the steps on smaller screens. */
 @media (max-width: 859px) {
   .method-steps-figure {
-    position: sticky;
-    top: 12px;
-    z-index: 2;
     width: auto;
-    max-width: min(420px, 100%);
-    max-height: 45vh;
-    aspect-ratio: 640 / 695;
+    max-width: min(315px, 100%);
   }
-  .method-steps-figure img { height: 100%; object-fit: contain; }
 }
 
 @media (prefers-reduced-motion: reduce) {
