@@ -527,23 +527,34 @@ strong { color: var(--text-primary); font-weight: 700; }
   outline: none;
 }
 
-/* Logo strip + page URL overlaid on the hero teaser video, bottom-left. This
-   corner is the only one that stays empty on EVERY slide (checked against all
-   six: title/subtitle/gen1/gen2/seg-text/seg) — the generation slides' images
-   run close to the bottom-right edge, and every slide's heading text runs
-   close to both top corners, so nowhere else is safe. Sizes are percentages
-   of the video box so the strip scales with it; the URL is fixed-color (not
-   a theme variable) since the video itself is always a white slideshow. */
+/* Logo strip + page URL overlaid on the hero teaser video, bottom-left.
+   Earlier (shorter) versions of this video had one corner that stayed empty
+   on every slide, so this had no background. The 11-slide version doesn't —
+   several slides (esp. the segmentation examples) have dark, busy content
+   reaching into every corner — so this now sits on its own semi-opaque pill
+   for guaranteed contrast regardless of what's playing underneath. Sizes are
+   percentages of the video box so the strip scales with it; colors are fixed
+   (not theme variables) since the video's own content doesn't follow the
+   page's light/dark theme. */
 .hero-logos {
   position: absolute;
   left: 2.5%;
-  bottom: 1.5%;
-  width: 56%;   /* gives the percentage gap below a definite basis to scale from */
-  height: 8.5%; /* the segmentation slide's "And produces SOTA results" caption sits
-                   just above this row — kept short of 10% so the two don't crowd */
+  bottom: 0.8%;
+  width: fit-content;   /* was a fixed 56% — sized to fit its own content instead,
+                            so it only ever covers as much as it actually needs */
+  height: 5%;   /* the 11-slide deck's "Key observations" slide has only ~6.5%
+                   of clear margin below its bottom bullet — kept short of
+                   that so the two don't overlap */
   display: flex;
   align-items: center;
-  gap: 3%;
+  gap: 6px;    /* fixed px, not %: a % gap on a wide box compounds into a much
+                  bigger footprint than the content needs (this is what made
+                  the original pill cover far more of the slide than intended) */
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
   pointer-events: none;
 }
 
@@ -556,12 +567,12 @@ strong { color: var(--text-primary); font-weight: 700; }
 .hero-logos .logo-cvit { height: 88%; }
 
 .hero-url {
-  margin-left: 2%;
-  padding-left: 4%;
+  margin-left: 4px;
+  padding-left: 8px;
   border-left: 1px solid rgba(0, 0, 0, 0.15);
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: #666;
   white-space: nowrap;
 }
@@ -870,6 +881,27 @@ figure { margin: 0; }
 
 @media (max-width: 640px) {
   .gallery-col-headers span { font-size: 0.62rem; padding-bottom: 4px; }
+}
+
+/* Segmentation gallery: also give the hovered image a subtler cursor than
+   the zoom-in cursor used elsewhere, since crosshair better hints at
+   "point at a part" than "click to enlarge" (the image is still clickable). */
+#results [data-panel="seg"] .gallery-slide img { cursor: crosshair; }
+
+/* Part-name tooltip that follows the cursor while hovering a segmentation
+   image (see the "Segmentation gallery" hover handler in main.js). */
+.part-tip {
+  position: fixed;
+  z-index: 2000;
+  pointer-events: none;
+  background: rgba(17, 17, 17, 0.92);
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .gallery {

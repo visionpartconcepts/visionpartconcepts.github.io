@@ -298,8 +298,11 @@
           </div>
 
           <div class="gallery-panel" data-panel="seg">
-            <!-- insets/gap match where the four columns sit inside the fig6 row images -->
-            <div class="gallery-col-headers" style="--cols:4; --inset-l:4.57%; --inset-r:7.75%; --col-gap:1.1%;">
+            <!-- Row images are 4 uniform 512x512 panels with a 14px gap; see
+                 assets/js/part-legend.js for the hover-label feature, which
+                 needs data-category on each img to know which part palette
+                 to match against. -->
+            <div class="gallery-col-headers" style="--cols:4; --inset-l:0%; --inset-r:0%; --col-gap:0.67%;">
               <span>Ground Truth</span>
               <span class="ours">Ours</span>
               <span>PartCATSeg (CVPR&rsquo;25)</span>
@@ -308,20 +311,16 @@
             <div class="gallery-viewport">
               <div class="gallery-track">
                 <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row1.jpg"
-                    alt="Part instance segmentation comparison on a dog: Ground Truth, Ours, PartCATSeg, LangHOPS.">
+                  <img src="assets/img/gallery/fig6_row1.jpg" data-category="dog"
+                    alt="Part instance segmentation comparison on a dog: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
                 </figure>
                 <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row2.jpg"
-                    alt="Part instance segmentation comparison on a cow: Ground Truth, Ours, PartCATSeg, LangHOPS.">
+                  <img src="assets/img/gallery/fig6_row2.jpg" data-category="person"
+                    alt="Part instance segmentation comparison on a person riding a motorbike: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
                 </figure>
                 <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row3.jpg"
-                    alt="Part instance segmentation comparison on a BMX rider: Ground Truth, Ours, PartCATSeg, LangHOPS.">
-                </figure>
-                <figure class="gallery-slide">
-                  <img src="assets/img/gallery/fig6_row4.jpg"
-                    alt="Part instance segmentation comparison on an animal in leaves: Ground Truth, Ours, PartCATSeg, LangHOPS.">
+                  <img src="assets/img/gallery/fig6_row3.jpg" data-category="cat"
+                    alt="Part instance segmentation comparison on a cat: Ground Truth, Ours, PartCATSeg, LangHOPS. Hover over the image to see each part's name.">
                 </figure>
               </div>
             </div>
@@ -371,4 +370,5 @@
   </svg>
 </button>
 
+<script src="assets/js/part-legend.js"></script>
 <script src="assets/js/main.js"></script>

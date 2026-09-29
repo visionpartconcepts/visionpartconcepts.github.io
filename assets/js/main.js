@@ -150,6 +150,97 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Segmentation gallery: hover over a colored part to see its name. Each
+  // row image is unlabeled (just color-coded masks over the photo); we read
+  // the pixel color under the cursor off an offscreen canvas and match it
+  // against that row's category palette (assets/js/part-legend.js) to find
+  // the closest part. Mask colors are alpha-blended (~0.8) over the photo in
+  // the source images, so this matches by NEAREST color, not an exact hit,
+  // and rejects anything too far off (plain photo background) via MAX_DIST.
+  var segImgs = document.querySelectorAll('#results [data-panel="seg"] .gallery-slide img[data-category]');
+  if (segImgs.length && window.PART_LEGEND) {
+    var MAX_DIST = 60; // sum of |dr|+|dg|+|db|
+    var srcToCategory = {};
+    var canvasCache = {}; // image src -> ready-to-read canvas at natural resolution
+
+    function getCanvasFor(img) {
+      var src = img.currentSrc || img.src;
+      if (canvasCache[src]) return canvasCache[src];
+      var canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      canvasCache[src] = canvas;
+      return canvas;
+    }
+
+    function nearestPart(category, r, g, b) {
+      var palette = window.PART_LEGEND[category];
+      if (!palette) return null;
+      var best = null, bestDist = Infinity;
+      for (var i = 0; i < palette.length; i++) {
+        var p = palette[i];
+        var d = Math.abs(p[0] - r) + Math.abs(p[1] - g) + Math.abs(p[2] - b);
+        if (d < bestDist) { bestDist = d; best = p[3]; }
+      }
+      return bestDist <= MAX_DIST ? best : null;
+    }
+
+    var tip = document.createElement('div');
+    tip.className = 'part-tip';
+    tip.style.display = 'none';
+    document.body.appendChild(tip);
+
+    function handleMove(img, category, clientX, clientY) {
+      var rect = img.getBoundingClientRect();
+      var x = clientX - rect.left, y = clientY - rect.top;
+      if (x < 0 || y < 0 || x >= rect.width || y >= rect.height) { tip.style.display = 'none'; return; }
+      var canvas;
+      try {
+        canvas = getCanvasFor(img);
+      } catch (e) { return; }
+      var px = Math.min(canvas.width - 1, Math.floor(x / rect.width * canvas.width));
+      var py = Math.min(canvas.height - 1, Math.floor(y / rect.height * canvas.height));
+      var data;
+      try {
+        data = canvas.getContext('2d').getImageData(px, py, 1, 1).data;
+      } catch (e) { return; } // canvas tainted (e.g. some local file:// setups) — fail silently
+      var name = nearestPart(category, data[0], data[1], data[2]);
+      if (!name) { tip.style.display = 'none'; return; }
+      tip.textContent = name;
+      tip.style.left = (clientX + 14) + 'px';
+      tip.style.top = (clientY + 14) + 'px';
+      tip.style.display = 'block';
+    }
+
+    segImgs.forEach(function (img) {
+      var category = img.dataset.category;
+      srcToCategory[img.src] = category; // .src (not getAttribute) so this matches the
+                                          // absolute URL the lightbox sets later
+      function bind() {
+        img.addEventListener('mousemove', function (e) { handleMove(img, category, e.clientX, e.clientY); });
+        img.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+      }
+      if (img.complete) bind(); else img.addEventListener('load', bind, { once: true });
+    });
+
+    // Also works on the enlarged (lightbox) copy. The lightbox reuses one
+    // <img> for every slide, so we match its current src back to a category
+    // and rebuild the canvas whenever that src changes (on 'load').
+    var lightboxImg = document.querySelector('.lightbox img');
+    if (lightboxImg) {
+      lightboxImg.addEventListener('load', function () {
+        try { getCanvasFor(lightboxImg); } catch (e) {}
+      });
+      lightboxImg.addEventListener('mousemove', function (e) {
+        var category = srcToCategory[lightboxImg.src];
+        if (!category) return;
+        handleMove(lightboxImg, category, e.clientX, e.clientY);
+      });
+      lightboxImg.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+    }
+  }
+
   // Gallery category tabs
   document.querySelectorAll('.gallery').forEach(function (gallery) {
     var tabs = Array.prototype.slice.call(gallery.querySelectorAll('.gallery-tab'));
