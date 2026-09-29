@@ -1,7 +1,7 @@
-# PARTCONCEPTS project page
+# PartConcepts project page
 
-Static project page for *PARTCONCEPTS: A Unified Mechanism for Fine-Grained Part
-Localization and Generation* (double-blind submission). Plain HTML/CSS/JS, no
+Static project page for *PartConcepts: A Unified Mechanism for Fine-Grained Part
+Localization and Generation* (NeurIPS 2026). Plain HTML/CSS/JS, no
 build step.
 
 ## Publish it on GitHub Pages
