@@ -122,6 +122,10 @@
             <figcaption>Cross-attention maps with the <code>left</code>, <code>lower</code>, and <code>leg</code> tokens.</figcaption>
           </figure>
         </div>
+        <figure class="motivation-capability-figure">
+          <p class="motivation-capability-intro">The poor part-level semantics correlate with several capability gaps in existing T2I diffusion models.</p>
+          <img src="assets/img/capability_gaps.svg" alt="Capability gaps in existing text-to-image diffusion models: poor concept segmentation and poor part-level prompt following.">
+        </figure>
         </div>
       </div>
     </div>
@@ -164,7 +168,6 @@
       </p>
 
       <div class="method-block">
-        <span class="method-number">3.1 &middot; The <span class="textsc">PartConcept</span> encoder</span>
         <h3>Encoding textual part descriptions into <span class="textsc">PartConcepts</span></h3>
         <div class="partconcept-intro">
           <div class="partconcept-intro-text">
@@ -177,8 +180,7 @@
       </div>
 
       <div class="method-block">
-        <span class="method-number">3.2 &middot; Training objective</span>
-        <h3>The localization and generative objectives</h3>
+        <h3>The training objectives</h3>
 
         <div class="method-steps">
           <div class="method-steps-figure">
@@ -197,13 +199,33 @@
             </li>
             <li class="method-step">
               <span class="method-step-num" aria-hidden="true">3</span>
-              <p>Layer-wise concatenated attention maps are decoded to segmentation masks.</p>
+              <p>Layer-wise concatenated attention maps are decoded to segmentation masks, and penalized using <strong>Dice loss</strong>.</p>
             </li>
             <li class="method-step">
               <span class="method-step-num" aria-hidden="true">4</span>
-              <p>Flow loss is used on the visual prediction by mmDiT; this preserves the generative prior of the base model.</p>
+              <p><strong>Flow loss</strong> on the velocity prediction; this preserves the generative capabilities.</p>
             </li>
           </ol>
+        </div>
+      </div>
+
+      <div class="method-block">
+        <h3>Balancing localization and generation</h3>
+        <div class="method-loss">
+          <ul class="method-loss-list">
+            <li>
+              <p>Both the dice loss (localization) and flow loss (generation) are balanced during training:</p>
+              <div class="method-loss-equation" aria-label="L equals L dice plus lambda L flow">
+                <i>L</i> = <i>L</i><sub>dice</sub> + <i>&lambda;L</i><sub>flow</sub>
+              </div>
+            </li>
+            <li>
+              <p><i>&lambda;</i> governs a tradeoff between localization accuracy and generation quality, as shown in the ablation below.</p>
+            </li>
+          </ul>
+          <div class="method-loss-figure">
+            <img src="assets/img/ablation_flow_weight.svg" alt="Ablation study showing the effect of the flow loss weight on localization accuracy and generation quality.">
+          </div>
         </div>
       </div>
     </div>
@@ -212,8 +234,17 @@
   <!-- Results -->
   <section id="results" class="alt">
     <div class="container">
-      <h2>Evaluating <span class="textsc">PartConcept</span> representations</h2>
-      <p class="section-intro evaluation-intro">To evaluate the part-level understanding of <span class="textsc">PartConcept</span> tokens, we first demonstrate our method&rsquo;s effectiveness for part segmentation. We then show that this strong localization directly enables precise part-level attribute binding, thus providing fine-grained instruction following in T2I generation. Thus, our <span class="textsc">PartConcepts</span> provide a unified mechanism for both visual grounding and generative control.</p>
+      <h2>Evaluating <span class="textsc">PartConcepts</span></h2>
+      <div class="evaluation-overview">
+        <ul>
+          <li>We evaluate our method <span class="textsc">PartConcepts</span> for localization and generation capabilities
+            <ul>
+              <li>Part instance segmentation</li>
+              <li>Part-level instruction following in text-to-image generation</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
       <div class="evaluation-cards">
         <article class="evaluation-card evaluation-card-clickable" data-results-modal="generation" role="button" tabindex="0" aria-label="Open generation results">
           <h3>Part-level instruction following</h3>
@@ -225,6 +256,27 @@
           <p class="evaluation-card-description">Localizing and segmenting individual object parts from open-vocabulary text prompts.</p>
           <img src="assets/img/segmentation_result_thumbnail.svg" alt="Examples of part instance segmentation with PartConcepts.">
         </article>
+      </div>
+
+      <div class="evaluation-summary">
+        <h3>Summary of experiments</h3>
+        <ul class="evaluation-summary-list">
+          <li><strong><span class="textsc">PartConcepts</span> enables state-of-the-art part instance segmentation</strong>
+            <ul>
+              <li>respects spatial organization of part instances (<em>left front leg</em> vs. <em>right back leg</em>)</li>
+            </ul>
+          </li>
+          <li>The textual attributes in the prompt naturally bind to the <span class="textsc">PartConcept</span> token
+            <ul>
+              <li>e.g., <em>purple</em> binds to <em>left lower arm</em></li>
+              <li>without need for explicit architectural mechanisms for attribute binding</li>
+            </ul>
+          </li>
+          <li><strong>The <span class="textsc">PartConcept</span> token behaves similar to a standard text embedding, but enriched with part-level semantics!</strong></li>
+        </ul>
+        <figure class="evaluation-summary-figure">
+          <img src="assets/img/attr_binding.svg" alt="Attribute binding example showing PartConcept attention for right upper arm and left lower arm.">
+        </figure>
       </div>
 
     </div>

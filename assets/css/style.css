@@ -126,6 +126,31 @@ section.alt { background: var(--bg-alt); }
   color: #963b16;
 }
 
+.motivation-capability-figure {
+  position: relative;
+  z-index: 1;
+  margin: 32px 0 0;
+}
+
+.motivation-capability-intro {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.motivation-capability-figure img {
+  display: block;
+  width: 60%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+  .motivation-capability-figure img { width: 100%; }
+}
+
 .motivation-issue:hover {
   animation: motivation-issue-glow 0.9s ease-in-out 2;
 }
@@ -347,9 +372,56 @@ code {
   margin-top: 32px;
 }
 
-.evaluation-intro {
-  max-width: 860px;
-  margin-bottom: 0;
+.evaluation-overview {
+  color: var(--text-secondary);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.evaluation-overview > ul,
+.evaluation-summary-list {
+  margin: 0;
+  padding-left: 1.35em;
+}
+
+.evaluation-overview ul ul,
+.evaluation-summary-list ul {
+  margin-top: 4px;
+  padding-left: 1.45em;
+  list-style-type: circle;
+}
+
+.evaluation-cards + .evaluation-summary {
+  margin-top: 56px;
+}
+
+.evaluation-summary h3 {
+  margin-bottom: 20px;
+}
+
+.evaluation-summary-list {
+  color: var(--text-secondary);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.evaluation-summary-list > li + li { margin-top: 8px; }
+
+.evaluation-summary-figure {
+  margin: 28px auto 0;
+  width: 60%;
+}
+
+.evaluation-summary-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 700px) {
+  .evaluation-summary-figure { width: 100%; }
 }
 
 .evaluation-card-segmentation { order: 1; }
@@ -822,17 +894,6 @@ figure { margin: 0; }
 .method-block { margin-bottom: 48px; }
 .method-block:last-child { margin-bottom: 0; }
 
-.method-number {
-  font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  display: block;
-}
-
 /* ---------- Training figure (Section 3.2) ---------- */
 .method-steps {
   display: grid;
@@ -905,6 +966,49 @@ figure { margin: 0; }
   font-size: 1rem;
   line-height: 1.55;
   color: var(--text-secondary);
+}
+
+.method-loss {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.method-loss-list {
+  margin: 0;
+  padding-left: 1.35em;
+  color: var(--text-secondary);
+}
+
+.method-loss-list li { padding-left: 0.35em; }
+.method-loss-list li + li { margin-top: 28px; }
+
+.method-loss-list p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.method-loss-equation {
+  margin-top: 10px;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--text-primary);
+}
+
+.method-loss-equation sub { font-size: 0.6em; }
+
+.method-loss-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 860px) {
+  .method-loss { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 6vw, 80px); }
 }
 
 /* Stack the figure above the steps on smaller screens. */
