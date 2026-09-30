@@ -147,6 +147,16 @@ section.alt { background: var(--bg-alt); }
   margin: 0 auto;
 }
 
+.motivation-citation {
+  position: relative;
+  z-index: 1;
+  margin: 18px 0 0;
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
 @media (max-width: 700px) {
   .motivation-capability-figure img { width: 100%; }
 }
@@ -639,6 +649,13 @@ strong { color: var(--text-primary); font-weight: 700; }
   border-radius: 999px;
   padding: 0.4em 0.9em;
   margin-bottom: 14px;
+}
+
+.venue-note {
+  display: block;
+  margin: -6px 0 14px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
 }
 
 .hero h1 {
