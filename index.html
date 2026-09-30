@@ -104,16 +104,16 @@
         <div class="motivation-issue" id="motivation-part-failure">
         <div class="insight-row">
           <div class="insight-row-text">
-            <p>But this fails to extend to the part-level granularity, e.g., <code>left lower leg</code>.</p>
+            <p>But this fails to extend to the part-level granularity, e.g., <code>left front leg</code>.</p>
           </div>
           <figure class="insight-row-visual">
             <div class="insight-visual-grid">
               <img src="assets/img/dog.png" alt="A dog standing in grass.">
               <img src="assets/img/attn_left.png" alt="Cross-attention map for the left token.">
-              <img src="assets/img/attn_front.png" alt="Cross-attention map for the lower token.">
+              <img src="assets/img/attn_front.png" alt="Cross-attention map for the front token.">
               <img src="assets/img/attn_leg.png" alt="Cross-attention map for the leg token.">
             </div>
-            <figcaption>Cross-attention maps with the <code>left</code>, <code>lower</code>, and <code>leg</code> tokens.</figcaption>
+            <figcaption>Cross-attention maps with the <code>left</code>, <code>front</code>, and <code>leg</code> tokens.</figcaption>
           </figure>
         </div>
         <figure class="motivation-capability-figure">
@@ -134,7 +134,7 @@
           <p>Prior work has shown that diffusion latents enable dense <span class="hover-reference" tabindex="0">semantic correspondence<span class="hover-card hover-card-correspondence" role="tooltip"><span class="hover-card-figures"><img src="assets/img/sem_corr_fig1.jpg" alt="Semantic correspondence points on a grey cat."><img src="assets/img/sem_corr_fig2.jpg" alt="Semantic correspondence points transferred to a second cat."></span><span class="hover-card-caption">Semantic correspondence matches the same visual parts across different images and poses using internal diffusion features. Figure adapted from Tang et al., <em>Emergent Correspondence from Image Diffusion</em>, NeurIPS 2023; see also Zhang et al., <em>Diffusion Features as Semantic Representations</em>, ICML 2023.</span></span></span>; hence possess the necessary resolution for part-level discrimination.</p>
         </div>
         <div class="observation">
-          <p>The <a class="hover-reference-link" href="#motivation-part-failure">dispersed cross-attention maps<span class="hover-card hover-card-attention" role="tooltip"><span class="hover-card-attention-grid"><span><img src="assets/img/dog.png" alt="A dog standing in grass."></span><span><img src="assets/img/attn_left.png" alt="Attention map for the left token."><small><code>left</code></small></span><span><img src="assets/img/attn_front.png" alt="Attention map for the lower token."><small><code>lower</code></small></span><span><img src="assets/img/attn_leg.png" alt="Attention map for the leg token."><small><code>leg</code></small></span></span><span class="hover-card-caption">Cross-attention is very dispersed for the part phrase <code>left lower leg</code>.</span></span></a> indicate that the text-image interaction is a bottleneck, failing to leverage the dense diffusion latents.</p>
+          <p>The <a class="hover-reference-link" href="#motivation-part-failure">dispersed cross-attention maps<span class="hover-card hover-card-attention" role="tooltip"><span class="hover-card-attention-grid"><span><img src="assets/img/dog.png" alt="A dog standing in grass."></span><span><img src="assets/img/attn_left.png" alt="Attention map for the left token."><small><code>left</code></small></span><span><img src="assets/img/attn_front.png" alt="Attention map for the front token."><small><code>front</code></small></span><span><img src="assets/img/attn_leg.png" alt="Attention map for the leg token."><small><code>leg</code></small></span></span><span class="hover-card-caption">Cross-attention is very dispersed for the part phrase <code>left front leg</code>.</span></span></a> indicate that the text-image interaction is a bottleneck, failing to leverage the dense diffusion latents.</p>
         </div>
       </div>
     </div>
