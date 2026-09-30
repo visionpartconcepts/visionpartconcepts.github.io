@@ -365,8 +365,8 @@ code {
   padding-left: 1.35em;
   color: var(--text-secondary);
   font-family: var(--serif);
-  font-size: 1.08rem;
-  line-height: 1.65;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
 .partconcept-intro-text li + li { margin-top: 12px; }
