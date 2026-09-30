@@ -16,9 +16,9 @@
 <header class="hero">
   <div class="container">
     <div>
-      <p class="venue-badge">Accepted to NeurIPS 2026</p>
       <h1><span class="textsc">PartConcepts</span></h1>
       <p class="subtitle">A Unified Mechanism for Fine-Grained Part Localization and Generation</p>
+      <p class="venue-badge">NeurIPS 2026 🎉</p>
 
       <div class="hero-authors">
         <p class="authors">
@@ -164,14 +164,17 @@
       <p class="section-intro">
         Given an input text prompt with part phrases (e.g., &lsquo;left ear&rsquo;), our goal is to make those
         phrases attend strongly to the correct part regions in the image &mdash; enabling both precise part-level
-        localization and, consequently, fine-grained instruction following in T2I generation.
+        localization and fine-grained instruction following in T2I generation.
       </p>
 
       <div class="method-block">
         <h3>Encoding textual part descriptions into <span class="textsc">PartConcepts</span></h3>
         <div class="partconcept-intro">
           <div class="partconcept-intro-text">
-            <p>In the base T2I model, a part phrase (e.g., <code>left ear</code>) is tokenized into discrete embeddings, each attending diffusely, without a coherent semantic signal. To resolve this, we convert each phrase into a compact <span class="textsc">PartConcept</span> representation obtained by mean pooling the textual embeddings.</p>
+            <ul>
+              <li>Each part-phrase (e.g., <em>left front leg</em>) is mean pooled into a compact <span class="textsc">PartConcept</span> token, which represents a <strong>coherent semantic signal</strong> rather than disparate tokens.</li>
+              <li>Selective layers of the text encoder are LoRA finetuned; this enables the <span class="textsc">PartConcept</span> token to learn part-level semantics.</li>
+            </ul>
           </div>
           <div class="partconcept-intro-figure">
             <img src="assets/img/partconcept.svg" alt="PartConcept representation formed by mean pooling the textual embeddings of a part phrase.">
